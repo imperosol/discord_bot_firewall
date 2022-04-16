@@ -12,7 +12,7 @@ module.exports.getKeyByValue = function getKeyByValue(object, value) {
     return Object.keys(object).find((key) => object[key] === value);
 };
 
-module.exports.roleValide = async function roleValide(/** string */ roleName) {
+module.exports.roleValide = function roleValide(/** string */ roleName) {
     const unvalidRoles = ["", "CVF2", "FOS4", "EPSEM"];
     for (const role of unvalidRoles) {
         if (roleName === role) {
@@ -39,21 +39,19 @@ module.exports.sleep = async function sleep(ms) {
     });
 }
 
-module.exports.renameRole = async function renameRole(/** string */ roleName) {
+function renameRole(/** string */ roleName) {
     if (roleName.endsWith("A")) return roleName.substr(0, roleName.length - 1);
 
-    for (const starting of ["LS", "LE", "IT", "LG", "LC", "KO","LX"])
-        if (roleName.startsWith(starting))
-            return starting;
-
+    if (["LS", "LE", "IT", "LG", "LC", "KO","LX"].includes(roleName.substr(0, 2)))
+        return roleName.substring(0, 2);
+    
     if (roleName.startsWith("ISI_C")) return "ISI_C";
 
     if (roleName.startsWith("OCR")) return "OCR";
 
     const rolesPE = ["PEXX", "PEEE", "PEEC", "PETM", "PEME", "PEHT", "PECS"];
-    for (const starting of rolesPE)
-        if (roleName.startsWith(starting))
-            return "PE";
+    if (rolesPE.includes(roleName.substr(0, 4)))
+        return "PE";
 
     return roleName;
 };
